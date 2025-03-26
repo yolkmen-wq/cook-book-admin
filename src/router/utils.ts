@@ -88,6 +88,7 @@ function filterNoPermissionTree(data: RouteComponent[]) {
   const newTree = cloneDeep(data).filter((v: any) =>
     isOneOfArray(v.meta?.roles, currentRoles)
   );
+
   newTree.forEach(
     (v: any) => v.children && (v.children = filterNoPermissionTree(v.children))
   );
@@ -151,7 +152,6 @@ function addPathMatch() {
 
 /** 处理动态路由（后端返回的路由） */
 function handleAsyncRoutes(routeList) {
-  console.log("handleAsyncRoutes", routeList);
   if (!routeList || routeList.length === 0) {
     usePermissionStoreHook().handleWholeMenus(routeList);
   } else {

@@ -188,6 +188,7 @@ menus:
   pureMindMap: Mind Map
   pureMenuOverflow: Menu Overflow Show Tooltip Text
   pureChildMenuOverflow: Child Menu Overflow Show Tooltip Text
+  pureDictMenu: Dict Manage
 status:
   pureLoad: Loading...
   pureMessage: Message
@@ -238,3 +239,6 @@ login:
   purePassWordSureReg: Please enter confirm password
   purePassWordDifferentReg: The two passwords do not match!
   purePassWordUpdateReg: Password has been updated
+articles:
+  pureArticle: Article Manage
+  pureCategory: Article Category

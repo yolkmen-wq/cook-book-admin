@@ -3,7 +3,7 @@ import { handleTree } from "@/utils/tree";
 import { message } from "@/utils/message";
 import {
   getMenuList,
-  getMenuDtl,
+  // getMenuDtl,
   updateMenuDtl,
   addMenu,
   deleteMenu
@@ -138,7 +138,6 @@ export function useMenu() {
   }
 
   function openDialog(title = "新增", row?: FormItemProps) {
-    console.log("openDialog", title, row);
     addDialog({
       title: `${title}菜单`,
       props: {
@@ -191,13 +190,19 @@ export function useMenu() {
             console.log("curData", curData);
             // 表单规则校验通过
             if (title === "新增") {
-              addMenu(curData);
-              // 实际开发先调用新增接口，再进行下面操作
-              chores();
+              addMenu(curData).then(res => {
+                if (res.success) {
+                  // 实际开发先调用新增接口，再进行下面操作
+                  chores();
+                }
+              });
             } else {
-              updateMenuDtl({ id: row.id, ...curData });
-              // 实际开发先调用修改接口，再进行下面操作
-              chores();
+              updateMenuDtl({ id: row.id, ...curData }).then(res => {
+                if (res.success) {
+                  // 实际开发先调用修改接口，再进行下面操作
+                  chores();
+                }
+              });
             }
           }
         });

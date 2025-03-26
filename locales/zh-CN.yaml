@@ -188,6 +188,8 @@ menus:
   pureMindMap: 思维导图
   pureMenuOverflow: 目录超出显示 Tooltip 文字提示
   pureChildMenuOverflow: 菜单超出显示 Tooltip 文字提示
+  pureDictMenu: 字典管理
+
 status:
   pureLoad: 加载中...
   pureMessage: 消息
@@ -238,3 +240,6 @@ login:
   purePassWordSureReg: 请输入确认密码
   purePassWordDifferentReg: 两次密码不一致!
   purePassWordUpdateReg: 修改密码成功
+articles:
+  pureArticle: 文章管理
+  pureCategory: 文章分类

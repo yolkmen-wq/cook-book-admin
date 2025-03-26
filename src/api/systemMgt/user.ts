@@ -24,9 +24,14 @@ export const getUserList = (data?: object) => {
   return http.request<ResultTable>("post", "/api/user", { data });
 };
 
+/** 新增系统管理-用户管理列表-用户*/
+export const addUser = (data?: object) => {
+  return http.request<ResultTable>("post", "/api/user/add", { data });
+};
+
 /** 删除系统管理-用户管理列表-用户*/
-export const deleteUser = (data?: object) => {
-  return http.request<ResultTable>("post", "/api/user/delete", { data });
+export const deleteUser = (id: number) => {
+  return http.request<ResultTable>("get", `/api/user/delete/${id}`);
 };
 
 /** 修改系统管理-用户管理列表-用户信息 */

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-// import tree from "./tree.vue";
-import { useUser } from "./utils/hook";
+import { useArticleMgt } from "./utils/hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
@@ -13,12 +12,12 @@ import Delete from "@iconify-icons/ep/delete";
 import EditPen from "@iconify-icons/ep/edit-pen";
 import Refresh from "@iconify-icons/ep/refresh";
 import AddFill from "@iconify-icons/ri/add-circle-line";
+import View from "@iconify-icons/ep/view";
 
 defineOptions({
-  name: "SystemUser"
+  name: "AticleMgt"
 });
 
-const treeRef = ref();
 const formRef = ref();
 const tableRef = ref();
 
@@ -39,16 +38,12 @@ const {
   openDialog,
   handleUpdate,
   handleDelete,
-  handleUpload,
-  handleReset,
-  handleRole,
   handleSizeChange,
   onSelectionCancel,
   handleCurrentChange,
   handleSelectionChange
-} = useUser(tableRef, treeRef);
+} = useArticleMgt(tableRef);
 </script>
-
 <template>
   <div :class="['flex', 'justify-between', deviceDetection() && 'flex-wrap']">
     <div
@@ -60,18 +55,18 @@ const {
         :model="form"
         class="search-form bg-bg_color w-[99/100] pl-8 pt-[12px] overflow-auto"
       >
-        <el-form-item label="用户名称：" prop="username">
+        <el-form-item label="文章标题：" prop="title">
           <el-input
             v-model="form.username"
-            placeholder="请输入用户名称"
+            placeholder="请输入文章标题"
             clearable
             class="!w-[180px]"
           />
         </el-form-item>
-        <el-form-item label="用户昵称：" prop="nickname">
+        <el-form-item label="作者名称：" prop="nickname">
           <el-input
             v-model="form.nickname"
-            placeholder="请输入用户昵称"
+            placeholder="请输入作者名称"
             clearable
             class="!w-[180px]"
           />
@@ -84,8 +79,19 @@ const {
             class="!w-[180px]"
           >
             <el-option label="已开启" value="1" />
-            <el-option label="已停用" value="0" />
+            <el-option label="已关闭" value="0" />
           </el-select>
+        </el-form-item>
+        <el-form-item label="创建时间：" prop="createTime">
+          <el-date-picker
+            v-model="form.createTime"
+            type="datetimerange"
+            start-placeholder="开始日期"
+            end-placeholder="截止日期"
+            format="YYYY-MM-DD HH:mm:ss"
+            date-format="YYYY/MM/DD HH:mm:ss"
+            time-format="A hh:mm:ss"
+          />
         </el-form-item>
         <el-form-item>
           <el-button
@@ -102,14 +108,14 @@ const {
         </el-form-item>
       </el-form>
 
-      <PureTableBar title="用户管理" :columns="columns" @refresh="onSearch">
+      <PureTableBar title="文章管理" :columns="columns" @refresh="onSearch">
         <template #buttons>
           <el-button
             type="primary"
             :icon="useRenderIcon(AddFill)"
             @click="openDialog()"
           >
-            新增用户
+            新增文章
           </el-button>
         </template>
         <template v-slot="{ size, dynamicColumns }">
@@ -163,6 +169,16 @@ const {
                 link
                 type="primary"
                 :size="size"
+                :icon="useRenderIcon(View)"
+                @click="openDialog('查看', row)"
+              >
+                查看
+              </el-button>
+              <el-button
+                class="reset-margin"
+                link
+                type="primary"
+                :size="size"
                 :icon="useRenderIcon(EditPen)"
                 @click="openDialog('修改', row)"
               >
@@ -184,56 +200,6 @@ const {
                   </el-button>
                 </template>
               </el-popconfirm>
-              <el-dropdown>
-                <el-button
-                  class="ml-3 mt-[2px]"
-                  link
-                  type="primary"
-                  :size="size"
-                  :icon="useRenderIcon(More)"
-                  @click="handleUpdate(row)"
-                />
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item>
-                      <el-button
-                        :class="buttonClass"
-                        link
-                        type="primary"
-                        :size="size"
-                        :icon="useRenderIcon(Upload)"
-                        @click="handleUpload(row)"
-                      >
-                        上传头像
-                      </el-button>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-button
-                        :class="buttonClass"
-                        link
-                        type="primary"
-                        :size="size"
-                        :icon="useRenderIcon(Password)"
-                        @click="handleReset(row)"
-                      >
-                        重置密码
-                      </el-button>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <el-button
-                        :class="buttonClass"
-                        link
-                        type="primary"
-                        :size="size"
-                        :icon="useRenderIcon(Role)"
-                        @click="handleRole(row)"
-                      >
-                        分配角色
-                      </el-button>
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
             </template>
           </pure-table>
         </template>

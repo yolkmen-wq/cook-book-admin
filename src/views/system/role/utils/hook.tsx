@@ -9,14 +9,14 @@ import { addDialog } from "@/components/ReDialog";
 import type { FormItemProps } from "../utils/types";
 import type { PaginationProps } from "@pureadmin/table";
 import { getKeyList, deviceDetection } from "@pureadmin/utils";
-import { getRoleMenu } from "@/api/system";
 import {
   getRoleList,
   updateRole,
   addRole,
   deleteRole,
   getRoleMenuIds,
-  saveRoleMenus
+  saveRoleMenus,
+  getRoleMenu
 } from "@/api/systemMgt/role";
 import { type Ref, reactive, ref, onMounted, h, toRaw, watch } from "vue";
 
@@ -24,7 +24,9 @@ export function useRole(treeRef: Ref) {
   const form = reactive({
     name: "",
     code: "",
-    status: ""
+    status: "",
+    pageSize: 10,
+    pageNum: 1
   });
   const curRow = ref();
   const formRef = ref();
@@ -100,15 +102,6 @@ export function useRole(treeRef: Ref) {
       slot: "operation"
     }
   ];
-  // const buttonClass = computed(() => {
-  //   return [
-  //     "!h-[20px]",
-  //     "reset-margin",
-  //     "!text-gray-500",
-  //     "dark:!text-white",
-  //     "dark:hover:!text-primary"
-  //   ];
-  // });
 
   function onChange({ row, index }) {
     console.log("onChange", row, index);
@@ -167,10 +160,14 @@ export function useRole(treeRef: Ref) {
 
   function handleSizeChange(val: number) {
     console.log(`${val} items per page`);
+    form.pageSize = val;
+    onSearch();
   }
 
   function handleCurrentChange(val: number) {
     console.log(`current page: ${val}`);
+    form.pageNum = val;
+    onSearch();
   }
 
   function handleSelectionChange(val) {
@@ -307,8 +304,8 @@ export function useRole(treeRef: Ref) {
   onMounted(async () => {
     onSearch();
     const { data } = await getRoleMenu();
-    treeIds.value = getKeyList(data, "id");
-    treeData.value = handleTree(data);
+    treeIds.value = getKeyList(data.list, "id");
+    treeData.value = handleTree(data.list);
   });
 
   watch(isExpandAll, val => {

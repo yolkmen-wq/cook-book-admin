@@ -41,10 +41,17 @@ export const getRoleMenuIds = (data?: object) => {
 
 /** 保存系统管理-角色管理-角色菜单 */
 export const saveRoleMenus = (data?: object) => {
-  return http.request<ResultTable>("post", "/api/role/save-role-menus", { data });
+  return http.request<ResultTable>("post", "/api/role/save-role-menus", {
+    data
+  });
 };
 
 /** 删除系统管理-角色管理-角色 */
 export const deleteRole = (id: number) => {
-  return http.request<ResultTable>("get", `/api/role/delete?id=${id}`);
+  return http.request<ResultTable>("get", `/api/role/delete/${id}`);
+};
+
+/** 获取角色管理-权限-菜单权限 */
+export const getRoleMenu = (data?: object) => {
+  return http.request<ResultTable>("post", "/api/role/role-menu", { data });
 };

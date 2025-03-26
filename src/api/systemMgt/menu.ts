@@ -41,5 +41,5 @@ export const addMenu = (data?: object) => {
 
 /** 删除系统管理-菜单管理-菜单 */
 export const deleteMenu = (id: number) => {
-  return http.request<Result>("get", `/api/menu/delete?id=${id}`);
+  return http.request<Result>("get", `/api/menu/delete/${id}`);
 };
