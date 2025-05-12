@@ -25,6 +25,8 @@ const {
   columnsItems,
   dataList,
   dataItemList,
+  pagination,
+  pagination2,
   onSearch,
   onSearch2,
   resetForm,
@@ -132,6 +134,7 @@ function onFullscreen() {
             :size="size"
             :data="dataList"
             :columns="dynamicColumns"
+            :pagination="{ ...pagination, size }"
             :header-cell-style="{
               background: 'var(--el-fill-color-light)',
               color: 'var(--el-text-color-primary)'
@@ -253,6 +256,7 @@ function onFullscreen() {
             :size="size"
             :data="dataItemList"
             :columns="dynamicColumns"
+            :pagination="{ ...pagination2, size }"
             :header-cell-style="{
               background: 'var(--el-fill-color-light)',
               color: 'var(--el-text-color-primary)'

@@ -19,10 +19,10 @@ import { type Ref, h, ref, toRaw, computed, reactive, onMounted } from "vue";
 
 export function useArticleMgt(tableRef: Ref) {
   const form = reactive({
-    username: "",
-    nickname: "",
+    title: "",
+    author: "",
     status: "",
-    createTime: "",
+    createdTime: [],
     pageSize: 10,
     pageNum: 1
   });
@@ -32,9 +32,6 @@ export function useArticleMgt(tableRef: Ref) {
   // 上传头像信息
   const switchLoadMap = ref({});
   const { switchStyle } = usePublicHooks();
-  const higherDeptOptions = ref();
-  const treeData = ref([]);
-  const treeLoading = ref(true);
   const selectedNum = ref(0);
   const pagination = reactive<PaginationProps>({
     total: 0,
@@ -136,8 +133,8 @@ export function useArticleMgt(tableRef: Ref) {
       `确认要<strong>${
         row.status === 0 ? "停用" : "启用"
       }</strong><strong style='color:var(--el-color-primary)'>${
-        row.username
-      }</strong>用户吗?`,
+        row.title
+      }</strong>文章吗?`,
       "系统提示",
       {
         confirmButtonText: "确定",
@@ -186,10 +183,14 @@ export function useArticleMgt(tableRef: Ref) {
 
   function handleSizeChange(val: number) {
     console.log(`${val} items per page`);
+    form.pageSize = val;
+    onSearch();
   }
 
   function handleCurrentChange(val: number) {
     console.log(`current page: ${val}`);
+    form.pageNum = val;
+    onSearch();
   }
 
   /** 当CheckBox选择项发生变化时会触发该事件 */
@@ -237,25 +238,12 @@ export function useArticleMgt(tableRef: Ref) {
     onSearch();
   };
 
-  function formatHigherDeptOptions(treeList) {
-    // 根据返回数据的status字段值判断追加是否禁用disabled字段，返回处理后的树结构，用于上级部门级联选择器的展示（实际开发中也是如此，不可能前端需要的每个字段后端都会返回，这时需要前端自行根据后端返回的某些字段做逻辑处理）
-    if (!treeList || !treeList.length) return;
-    const newTreeList = [];
-    for (let i = 0; i < treeList.length; i++) {
-      treeList[i].disabled = treeList[i].status === 0 ? true : false;
-      formatHigherDeptOptions(treeList[i].children);
-      newTreeList.push(treeList[i]);
-    }
-    return newTreeList;
-  }
-
   function openDialog(title = "新增", row?: FormItemProps) {
     addDialog({
       title: `${title}文章`,
       props: {
         formInline: {
           title: row?.title ?? "",
-          higherDeptOptions: formatHigherDeptOptions(higherDeptOptions.value),
           cover: row?.cover ?? "",
           content: row?.content ?? "",
           author: row?.author ?? "",
@@ -274,7 +262,7 @@ export function useArticleMgt(tableRef: Ref) {
         const FormRef = formRef.value.getRef();
         const curData = options.props.formInline as FormItemProps;
         function chores() {
-          message(`您${title}了用户名称为${curData.username}的这条数据`, {
+          message(`您成功${title}了这条数据`, {
             type: "success"
           });
           done(); // 关闭弹框
@@ -311,8 +299,6 @@ export function useArticleMgt(tableRef: Ref) {
     loading,
     columns,
     dataList,
-    treeData,
-    treeLoading,
     selectedNum,
     pagination,
     buttonClass,

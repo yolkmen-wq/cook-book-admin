@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import ReCol from "@/components/ReCol";
 import { formRules } from "../utils/rule";
 import { FormProps } from "../utils/types";
 import { usePublicHooks } from "../../hooks";
 import { EditorUpload } from "../components";
-
+import { getArticleCategoryList } from "@/api/articleMgt/articleCategory";
 const props = withDefaults(defineProps<FormProps>(), {
   formInline: () => ({
     title: "新增",
@@ -20,45 +20,26 @@ const props = withDefaults(defineProps<FormProps>(), {
   })
 });
 
-const sexOptions = [
-  {
-    value: 0,
-    label: "男"
-  },
-  {
-    value: 1,
-    label: "女"
-  }
-];
 const ruleFormRef = ref();
 const { switchStyle } = usePublicHooks();
 const newFormInline = ref(props.formInline);
-const options = [
-  {
-    value: "Option1",
-    label: "Option1"
-  },
-  {
-    value: "Option2",
-    label: "Option2"
-  },
-  {
-    value: "Option3",
-    label: "Option3"
-  },
-  {
-    value: "Option4",
-    label: "Option4"
-  },
-  {
-    value: "Option5",
-    label: "Option5"
-  }
-];
+const options = ref([]);
 
 function getRef() {
   return ruleFormRef.value;
 }
+
+onMounted(() => {
+  getArticleCategoryList().then(res => {
+    console.log("res", res);
+    options.value = res.data.list.map(v => {
+      return {
+        label: v.categoryName,
+        value: v.id
+      };
+    });
+  });
+});
 
 defineExpose({ getRef });
 </script>

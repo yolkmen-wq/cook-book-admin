@@ -172,10 +172,14 @@ export function useArticleCategory(tableRef: Ref) {
 
   function handleSizeChange(val: number) {
     console.log(`${val} items per page`);
+    form.pageSize = val;
+    onSearch();
   }
 
   function handleCurrentChange(val: number) {
     console.log(`current page: ${val}`);
+    form.pageNum = val;
+    onSearch();
   }
 
   /** 当CheckBox选择项发生变化时会触发该事件 */

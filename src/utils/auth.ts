@@ -57,7 +57,6 @@ export function setToken(data: DataInfo<Date>) {
         expires: (expires - Date.now()) / 86400000
       })
     : Cookies.set(TokenKey, cookieString);
-
   Cookies.set(
     multipleTabsKey,
     "true",

@@ -111,6 +111,12 @@ export const useUserStore = defineStore("pure-user", {
             }
           })
           .catch(error => {
+            if (error.status === 401) {
+              removeToken();
+              useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
+              resetRouter();
+              router.push("/login");
+            }
             reject(error);
           });
       });

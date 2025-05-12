@@ -30,14 +30,15 @@ const {
   dataItemList,
   selectedNum,
   pagination,
+  carouselId,
   deviceDetection,
   onSearch,
   resetForm,
   onbatchDel,
   openDialog,
   openDialog2,
-  handleUpdate,
   handleDelete,
+  handleDelete2,
   handleSizeChange,
   onSelectionCancel,
   handleCurrentChange,
@@ -148,7 +149,7 @@ const {
                 修改
               </el-button>
               <el-popconfirm
-                :title="`是否确认删除用户编号为${row.id}的这条数据`"
+                :title="`是否确认删除编号为${row.id}的这条数据`"
                 @confirm="handleDelete(row)"
               >
                 <template #reference>
@@ -172,35 +173,6 @@ const {
     <div
       :class="[deviceDetection() ? ['w-full', 'mt-2'] : 'w-[calc(100%-200px)]']"
     >
-      <el-form
-        ref="formRef"
-        :inline="true"
-        :model="form"
-        class="search-form bg-bg_color w-[99/100] pl-8 pt-[12px] overflow-auto"
-      >
-        <el-form-item label="轮播图名称：" prop="title">
-          <el-input
-            v-model="form.username"
-            placeholder="请输入轮播图名称"
-            clearable
-            class="!w-[180px]"
-          />
-        </el-form-item>
-        <el-form-item>
-          <el-button
-            type="primary"
-            :icon="useRenderIcon('ri:search-line')"
-            :loading="loading"
-            @click="onSearch"
-          >
-            搜索
-          </el-button>
-          <el-button :icon="useRenderIcon(Refresh)" @click="resetForm(formRef)">
-            重置
-          </el-button>
-        </el-form-item>
-      </el-form>
-
       <PureTableBar
         title="轮播图项列表"
         :columns="columnsItem"
@@ -210,6 +182,7 @@ const {
           <el-button
             type="primary"
             :icon="useRenderIcon(AddFill)"
+            :disabled="!carouselId"
             @click="openDialog2()"
           >
             新增轮播图项
@@ -271,8 +244,8 @@ const {
                 修改
               </el-button>
               <el-popconfirm
-                :title="`是否确认删除用户编号为${row.id}的这条数据`"
-                @confirm="handleDelete(row)"
+                :title="`是否确认删除编号为${row.id}的这条数据`"
+                @confirm="handleDelete2(row)"
               >
                 <template #reference>
                   <el-button

@@ -4,10 +4,6 @@ import { useArticleMgt } from "./utils/hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 
-import Upload from "@iconify-icons/ri/upload-line";
-import Role from "@iconify-icons/ri/admin-line";
-import Password from "@iconify-icons/ri/lock-password-line";
-import More from "@iconify-icons/ep/more-filled";
 import Delete from "@iconify-icons/ep/delete";
 import EditPen from "@iconify-icons/ep/edit-pen";
 import Refresh from "@iconify-icons/ep/refresh";
@@ -26,17 +22,13 @@ const {
   loading,
   columns,
   dataList,
-  treeData,
-  treeLoading,
   selectedNum,
   pagination,
-  buttonClass,
   deviceDetection,
   onSearch,
   resetForm,
   onbatchDel,
   openDialog,
-  handleUpdate,
   handleDelete,
   handleSizeChange,
   onSelectionCancel,
@@ -57,15 +49,15 @@ const {
       >
         <el-form-item label="文章标题：" prop="title">
           <el-input
-            v-model="form.username"
+            v-model="form.title"
             placeholder="请输入文章标题"
             clearable
             class="!w-[180px]"
           />
         </el-form-item>
-        <el-form-item label="作者名称：" prop="nickname">
+        <el-form-item label="作者名称：" prop="author">
           <el-input
-            v-model="form.nickname"
+            v-model="form.author"
             placeholder="请输入作者名称"
             clearable
             class="!w-[180px]"
@@ -78,17 +70,18 @@ const {
             clearable
             class="!w-[180px]"
           >
-            <el-option label="已开启" value="1" />
-            <el-option label="已关闭" value="0" />
+            <el-option label="已开启" :value="1" />
+            <el-option label="已关闭" :value="0" />
           </el-select>
         </el-form-item>
-        <el-form-item label="创建时间：" prop="createTime">
+        <el-form-item label="创建时间：" prop="createdTime">
           <el-date-picker
-            v-model="form.createTime"
+            v-model="form.createdTime"
             type="datetimerange"
             start-placeholder="开始日期"
             end-placeholder="截止日期"
             format="YYYY-MM-DD HH:mm:ss"
+            value-format="YYYY-MM-DD  HH:mm:ss"
             date-format="YYYY/MM/DD HH:mm:ss"
             time-format="A hh:mm:ss"
           />

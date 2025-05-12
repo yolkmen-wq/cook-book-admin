@@ -10,8 +10,11 @@ import {
   getCarouselList,
   getCarouselItemList,
   addCarousel,
+  addCarouselItem,
   updateCarousel,
-  deleteCarousel
+  updateCarouselItem,
+  deleteCarousel,
+  deleteCarouselItem
 } from "@/api/articleMgt/carousel";
 // import { ElMessageBox } from "element-plus";
 import { type Ref, h, ref, toRaw, computed, reactive, onMounted } from "vue";
@@ -29,6 +32,7 @@ export function useArticleMgt(tableRef: Ref) {
   });
   const carouselId = ref("");
   const formRef = ref();
+  const formRef2 = ref();
   const dataList = ref([]);
   const dataItemList = ref([]);
   const loading = ref(true);
@@ -80,22 +84,31 @@ export function useArticleMgt(tableRef: Ref) {
     },
     {
       label: "轮播图片",
-      prop: "id",
+      prop: "imageUrl",
+      cellRenderer: ({ row }) => (
+        <el-image
+          fit="cover"
+          preview-teleported={true}
+          src={row.imageUrl}
+          preview-src-list={Array.of(row.imageUrl)}
+          class="w-[24px] h-[24px] rounded-full align-middle"
+        />
+      ),
       width: 90
     },
     {
       label: "跳转类型",
-      prop: "id",
+      prop: "jumpType",
       width: 90
     },
     {
       label: "类型内容",
-      prop: "title",
+      prop: "keyWord",
       minWidth: 100
     },
     {
       label: "排序",
-      prop: "title",
+      prop: "sort",
       minWidth: 100
     },
     {
@@ -125,6 +138,15 @@ export function useArticleMgt(tableRef: Ref) {
       type: "success"
     });
     onSearch();
+  }
+
+  async function handleDelete2(row) {
+    console.log("handleDelete2", row);
+    await deleteCarouselItem(row.carouselItemId);
+    message(`您成功删除了编号为${row.carouselId}的这条数据`, {
+      type: "success"
+    });
+    onSearch2();
   }
 
   function handleSizeChange(val: number) {
@@ -191,7 +213,7 @@ export function useArticleMgt(tableRef: Ref) {
 
   function openDialog(title = "新增", row?: FormItemProps) {
     addDialog({
-      title: `${title}文章`,
+      title: `${title}轮播图`,
       props: {
         formInline: {
           title: row?.title ?? "",
@@ -243,15 +265,13 @@ export function useArticleMgt(tableRef: Ref) {
 
   function openDialog2(title = "新增", row?: FormItemProps) {
     addDialog({
-      title: `${title}文章`,
+      title: `${title}轮播图项`,
       props: {
         formInline: {
           title: row?.title ?? "",
-          cover: row?.cover ?? "",
-          content: row?.content ?? "",
-          author: row?.author ?? "",
-          status: row?.status ?? 1,
-          readonly: title === "查看" ? true : false
+          jumpType: row?.jumpType ?? "1",
+          imageUrl: row?.imageUrl ?? "",
+          keyWord: row?.keyWord ?? ""
         }
       },
       width: "46%",
@@ -259,31 +279,37 @@ export function useArticleMgt(tableRef: Ref) {
       fullscreen: deviceDetection(),
       fullscreenIcon: true,
       closeOnClickModal: false,
-      contentRenderer: () => h(editForm2, { ref: formRef, formInline: null }),
+      contentRenderer: () => h(editForm2, { ref: formRef2, formInline: null }),
       beforeSure: (done, { options }) => {
         console.log("beforeSure", options);
-        const FormRef = formRef.value.getRef();
+        const FormRef = formRef2.value.getRef();
         const curData = options.props.formInline as FormItemProps;
         function chores() {
           message(`您成功${title}了这条数据`, {
             type: "success"
           });
           done(); // 关闭弹框
-          onSearch(); // 刷新表格数据
+          onSearch2(); // 刷新表格数据
         }
         FormRef.validate(async valid => {
           if (valid) {
             console.log("curData", curData);
             // 表单规则校验通过
             if (title === "新增") {
-              addCarousel(curData).then(res => {
+              addCarouselItem({
+                ...curData,
+                carouselId: carouselId.value
+              }).then(res => {
                 if (res.success) {
                   // 实际开发先调用新增接口，再进行下面操作
                   chores();
                 }
               });
             } else {
-              await updateCarousel({ ...curData, id: row?.id });
+              await updateCarouselItem({
+                ...curData,
+                carouselItemId: row?.carouselItemId
+              });
               // 实际开发先调用修改接口，再进行下面操作
               chores();
             }
@@ -315,6 +341,7 @@ export function useArticleMgt(tableRef: Ref) {
     selectedNum,
     pagination,
     buttonClass,
+    carouselId,
     deviceDetection,
     onSearch,
     resetForm,
@@ -323,6 +350,7 @@ export function useArticleMgt(tableRef: Ref) {
     openDialog2,
     handleUpdate,
     handleDelete,
+    handleDelete2,
     handleSizeChange,
     onSelectionCancel,
     handleCurrentChange,

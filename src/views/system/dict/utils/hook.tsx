@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
-import editForm from "../form.vue";
-import editForm2 from "../form2.vue";
+import editForm from "../form/form.vue";
+import editForm2 from "../form/form2.vue";
 import { message } from "@/utils/message";
 import {
   getDictList,
@@ -45,6 +45,12 @@ export function useDept() {
   const loading = ref(true);
   const { tagReverseStyle } = usePublicHooks();
   const pagination = reactive<PaginationProps>({
+    total: 0,
+    pageSize: 10,
+    currentPage: 1,
+    background: true
+  });
+  const pagination2 = reactive<PaginationProps>({
     total: 0,
     pageSize: 10,
     currentPage: 1,
@@ -177,9 +183,9 @@ export function useDept() {
       dictType: dictType.value
     });
     let newData = data.list;
-    pagination.total = data.total;
-    pagination.pageSize = data.pageSize;
-    pagination.currentPage = data.currentPage;
+    pagination2.total = data.total;
+    pagination2.pageSize = data.pageSize;
+    pagination2.currentPage = data.currentPage;
     if (!isAllEmpty(formItem.dictLabel)) {
       // 前端搜索字典标签
       newData = newData.filter(item => item.dictName.includes(form.dictName));
@@ -361,6 +367,8 @@ export function useDept() {
     columnsItems,
     dataList,
     dataItemList,
+    pagination,
+    pagination2,
     /** 搜索 */
     onSearch,
     onSearch2,
