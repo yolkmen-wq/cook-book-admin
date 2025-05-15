@@ -116,11 +116,6 @@ defineExpose({ getRef });
       </re-col>
       <re-col :value="12" :xs="24" :sm="24">
         <el-form-item label="分类图片" prop="categoryPic">
-          <!-- <el-input
-            v-model="newFormInline.categoryPic"
-            clearable
-            placeholder="请输入分类图片"
-          /> -->
           <el-upload
             v-model:file-list="fileList"
             class="avatar-uploader"

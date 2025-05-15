@@ -1,24 +1,24 @@
 import "./reset.css";
 import dayjs from "dayjs";
-import editForm from "../form/index.vue";
 import { message } from "@/utils/message";
 import { usePublicHooks } from "../../hooks";
 import { addDialog } from "@/components/ReDialog";
+import editForm from "../form/index.vue";
 import type { PaginationProps } from "@pureadmin/table";
 import type { FormItemProps } from "../utils/types";
 import { getKeyList, deviceDetection } from "@pureadmin/utils";
 import {
-  getArticleList,
-  addArticle,
-  updateArticle,
-  deleteArticle
-} from "@/api/articleMgt/article";
+  addEmoji,
+  getEmojiList,
+  updateEmoji,
+  deleteEmoji
+} from "@/api/emojiMgt/emoji";
 import { ElMessageBox } from "element-plus";
 import { type Ref, h, ref, toRaw, computed, reactive, onMounted } from "vue";
 
 export function useArticleMgt(tableRef: Ref) {
   const form = reactive({
-    title: "",
+    name: "",
     author: "",
     status: "",
     createdTime: [],
@@ -46,12 +46,12 @@ export function useArticleMgt(tableRef: Ref) {
       reserveSelection: true // 数据刷新后保留选项
     },
     {
-      label: "文章编号",
+      label: "表情编号",
       prop: "id",
       width: 90
     },
     {
-      label: "文章封面",
+      label: "表情图片",
       prop: "cover",
       cellRenderer: ({ row }) => (
         <el-image
@@ -65,24 +65,9 @@ export function useArticleMgt(tableRef: Ref) {
       width: 90
     },
     {
-      label: "文章标题",
-      prop: "title",
+      label: "表情名称",
+      prop: "name",
       minWidth: 100
-    },
-    {
-      label: "文章作者",
-      prop: "author",
-      width: 130
-    },
-    {
-      label: "文章内容",
-      prop: "content",
-      width: 130,
-      cellRenderer: ({ row }) => (
-        <div style="width:140px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-          <div v-html={row.content}></div>
-        </div>
-      )
     },
     {
       label: "状态",
@@ -151,7 +136,7 @@ export function useArticleMgt(tableRef: Ref) {
             loading: true
           }
         );
-        await updateArticle({ id: row.id, status: row.status });
+        await updateEmoji({ id: row.id, status: row.status });
         setTimeout(() => {
           switchLoadMap.value[index] = Object.assign(
             {},
@@ -175,7 +160,7 @@ export function useArticleMgt(tableRef: Ref) {
   }
 
   async function handleDelete(row) {
-    await deleteArticle(row.id);
+    await deleteEmoji(row.id);
     message(`您删除了用户编号为${row.id}的这条数据`, { type: "success" });
     onSearch();
   }
@@ -220,7 +205,7 @@ export function useArticleMgt(tableRef: Ref) {
 
   async function onSearch() {
     loading.value = true;
-    const { data } = await getArticleList(toRaw(form));
+    const { data } = await getEmojiList(toRaw(form));
     dataList.value = data.list;
     pagination.total = data.total;
     pagination.pageSize = data.pageSize;
@@ -243,9 +228,9 @@ export function useArticleMgt(tableRef: Ref) {
       props: {
         formInline: {
           title: row?.title ?? "",
-          cover: row?.cover ?? "",
-          content: row?.content ?? "",
-          author: row?.author ?? "",
+          name: row?.name ?? "",
+          url: row?.url ?? "",
+          unicode: row?.unicode ?? "",
           status: row?.status ?? 1,
           readonly: title === "查看" ? true : false
         }
@@ -272,14 +257,14 @@ export function useArticleMgt(tableRef: Ref) {
             console.log("curData", curData);
             // 表单规则校验通过
             if (title === "新增") {
-              addArticle(curData).then(res => {
+              addEmoji(curData).then(res => {
                 if (res.success) {
                   // 实际开发先调用新增接口，再进行下面操作
                   chores();
                 }
               });
             } else {
-              await updateArticle({ ...curData, id: row?.id });
+              await updateEmoji({ ...curData, id: row?.id });
               // 实际开发先调用修改接口，再进行下面操作
               chores();
             }

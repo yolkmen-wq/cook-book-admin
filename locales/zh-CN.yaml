@@ -243,3 +243,5 @@ login:
 articles:
   pureArticle: 文章管理
   pureCategory: 文章分类
+emoji:
+  pureEmoji: Emoji管理  

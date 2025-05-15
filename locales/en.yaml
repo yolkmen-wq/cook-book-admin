@@ -242,3 +242,5 @@ login:
 articles:
   pureArticle: Article Manage
   pureCategory: Article Category
+emoji:
+  pureEmoji: Emoji Manage
