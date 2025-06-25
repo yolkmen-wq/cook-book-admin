@@ -4,6 +4,7 @@ interface FormItemProps {
   title: string;
   url: string;
   name: string;
+  categoryId: number;
   unicode?: string;
   status: number;
   readonly?: boolean;

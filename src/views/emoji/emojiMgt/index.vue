@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useArticleMgt } from "./utils/hook";
 import { PureTableBar } from "@/components/RePureTableBar";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { getDictDataList } from "@/api/systemMgt/dict";
 
 import Delete from "@iconify-icons/ep/delete";
 import EditPen from "@iconify-icons/ep/edit-pen";
@@ -16,7 +17,14 @@ defineOptions({
 
 const formRef = ref();
 const tableRef = ref();
+const options = ref([]);
 
+onMounted(async () => {
+  const res = await getDictDataList({ dictType: "sys_emoji_category" });
+  options.value = res.data.list.map(item => {
+    return { label: item.dictLabel, value: item.dictValue.toString() };
+  });
+});
 const {
   form,
   loading,
@@ -54,6 +62,21 @@ const {
             placeholder="请输入表情名称"
           />
         </el-form-item>
+        <el-form-item label="表情分类" prop="categoryId">
+          <el-select
+            v-model="form.categoryId"
+            clearable
+            placeholder="请输入表情分类"
+            class="!w-[180px]"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="状态：" prop="status">
           <el-select
             v-model="form.status"
@@ -61,8 +84,8 @@ const {
             clearable
             class="!w-[180px]"
           >
-            <el-option label="已开启" :value="1" />
-            <el-option label="已关闭" :value="0" />
+            <el-option label="已启用" :value="1" />
+            <el-option label="已停用" :value="0" />
           </el-select>
         </el-form-item>
         <el-form-item label="创建时间：" prop="createdTime">

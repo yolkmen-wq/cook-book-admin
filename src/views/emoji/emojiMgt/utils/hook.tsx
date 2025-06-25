@@ -21,6 +21,7 @@ export function useArticleMgt(tableRef: Ref) {
     name: "",
     author: "",
     status: "",
+    categoryId: "",
     createdTime: [],
     pageSize: 10,
     pageNum: 1
@@ -51,22 +52,30 @@ export function useArticleMgt(tableRef: Ref) {
       width: 90
     },
     {
-      label: "表情图片",
+      label: "表情展示",
       prop: "cover",
-      cellRenderer: ({ row }) => (
-        <el-image
-          fit="cover"
-          preview-teleported={true}
-          src={row.cover}
-          preview-src-list={Array.of(row.cover)}
-          class="w-[24px] h-[24px] rounded-full align-middle"
-        />
-      ),
+      cellRenderer: ({ row }) =>
+        row.cover ? (
+          <el-image
+            fit="cover"
+            preview-teleported={true}
+            src={row.cover}
+            preview-src-list={Array.of(row.cover)}
+            class="w-[24px] h-[24px] rounded-full align-middle"
+          />
+        ) : (
+          row.unicode
+        ),
       width: 90
     },
     {
       label: "表情名称",
       prop: "name",
+      minWidth: 100
+    },
+    {
+      label: "表情分类",
+      prop: "categoryName",
       minWidth: 100
     },
     {
@@ -117,8 +126,8 @@ export function useArticleMgt(tableRef: Ref) {
       `确认要<strong>${
         row.status === 0 ? "停用" : "启用"
       }</strong><strong style='color:var(--el-color-primary)'>${
-        row.title
-      }</strong>文章吗?`,
+        row.name
+      }</strong>表情吗?`,
       "系统提示",
       {
         confirmButtonText: "确定",
@@ -145,7 +154,7 @@ export function useArticleMgt(tableRef: Ref) {
               loading: false
             }
           );
-          message("已成功修改用户状态", {
+          message("已成功修改表情状态", {
             type: "success"
           });
         }, 300);
@@ -224,7 +233,7 @@ export function useArticleMgt(tableRef: Ref) {
 
   function openDialog(title = "新增", row?: FormItemProps) {
     addDialog({
-      title: `${title}文章`,
+      title: `${title}表情`,
       props: {
         formInline: {
           title: row?.title ?? "",
@@ -232,6 +241,7 @@ export function useArticleMgt(tableRef: Ref) {
           url: row?.url ?? "",
           unicode: row?.unicode ?? "",
           status: row?.status ?? 1,
+          categoryId: row?.categoryId,
           readonly: title === "查看" ? true : false
         }
       },
